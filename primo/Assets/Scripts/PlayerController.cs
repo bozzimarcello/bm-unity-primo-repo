@@ -9,7 +9,11 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
 
     [SerializeField] TMP_Text scoreText;
-    private int score = 0;
+    [SerializeField] TMP_Text timeText;
+    private int score = 1000;
+    private float malusScore = 0;
+    private float timeSofar = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,13 +26,26 @@ public class PlayerController : MonoBehaviour
     {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
-        rb.AddForce(h * push, 0,v * push);
+        rb.AddForce(h * push * Time.deltaTime, 0, v * push * Time.deltaTime);
+        timeSofar += Time.deltaTime;
+        timeText.text = timeSofar.ToString("0");
+        if(malusScore<1)
+        {
+            malusScore += Time.deltaTime;
+        }
+        else
+        {
+            malusScore = 0;
+            score -= 10;
+            scoreText.text = score.ToString();
+        }
+        Debug.Log("malusScore: " + malusScore);
     }
 
     private void OnCollisionEnter(Collision other) 
     {
         score += 100;
         scoreText.text = score.ToString();
-        Debug.Log("collisione, score = " + score);
+        // Debug.Log("collisione, score = " + score);
     }
 }
